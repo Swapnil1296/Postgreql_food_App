@@ -79,15 +79,15 @@ module.exports = {
       const token = jwt.sign({ email: user_email }, process.env.JWT_SECRET, {
         expiresIn: "1h", // Token expires in 1 hour
       });
-      // Setting token to browser cookies (HttpOnly)
+
       res.cookie("tomato_token_server", token, {
         httpOnly: true,
       });
 
       // Setting a non-HttpOnly cookie for client-side use
-      res.cookie("tomato_token", token, {
-        httpOnly: false,
-      });
+      // res.cookie("tomato_token", token, {
+      //   httpOnly: false,
+      // });
       res.status(200).json({
         status: 1,
         message: "User logged in  successfully",
