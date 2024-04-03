@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get("/getuser", getUsers);
 router.post(
-  "/sing-up",
+  "/sign-up",
   ValidateBodyBeforeSignUp(schemas.signUpSchema),
   SignUpUser
 );

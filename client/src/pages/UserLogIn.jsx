@@ -35,6 +35,7 @@ const UserLogIn = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
 
           body: JSON.stringify({
             user_email: values.email,
@@ -42,7 +43,7 @@ const UserLogIn = () => {
           }),
         });
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if (data.status === 1) {
           dispatch(signInSuccess(data.user));
           navigate("/");
@@ -60,7 +61,7 @@ const UserLogIn = () => {
         onSubmit={formik.handleSubmit}
       >
         <p className="font-bold text-2xl text-orange-400 underline">
-          Log in here
+          Need to Login before proceeding further.
         </p>
         <div className="flex flex-col gap-4 w-full">
           <label htmlFor="email">Enter Your Email</label>
@@ -95,19 +96,25 @@ const UserLogIn = () => {
             <div className="text-red-700">{formik.errors.password}</div>
           ) : null}
         </div>
+
         <div>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
           >
-            Log in
+            Sign In
           </button>
         </div>
         <div>
           <p>
             Don't have a Acocoutn ?{" "}
-            <span className="text-blue-500 hover:cursor-pointer">Sing in</span>{" "}
-            here{" "}
+            <span
+              className="text-blue-500 hover:cursor-pointer"
+              onClick={() => navigate("/sign-up")}
+            >
+              Sing Up
+            </span>{" "}
+            here
           </p>
         </div>
       </form>

@@ -20,8 +20,6 @@ const Home = () => {
   }, []);
   return (
     <>
-      <Header />
-
       <div className="  grid grid-cols-4 gap-2 mx-3">
         {data &&
           data.map((items) => (

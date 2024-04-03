@@ -9,6 +9,7 @@ module.exports = {
       .finally((data) => console.log(data));
   },
   SignUpUser: async (userInfo) => {
+    console.log("userINfo: " + userInfo);
     return new Promise(async (resolve, reject) => {
       try {
         // Check if the user already exists

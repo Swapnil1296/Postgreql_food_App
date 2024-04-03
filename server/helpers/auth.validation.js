@@ -45,7 +45,7 @@ const schemas = {
     user_profile: Joi.string()
       .required()
       .messages({ "any.required": "Please provide a profile name" }),
-    user_address: Joi.string(),
+
     password: Joi.string()
       .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,30}$"))
       .min(6)

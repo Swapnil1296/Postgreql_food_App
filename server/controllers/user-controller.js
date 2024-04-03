@@ -7,7 +7,6 @@ module.exports = {
   getUsers: async (req, res, next) => {
     try {
       await userModal.GetAllUser().then((data) => {
-        console.log("data in controller:", data.rows);
         res
           .status(200)
           .json({
@@ -28,6 +27,7 @@ module.exports = {
     }
   },
   SignUpUser: async (req, res, next) => {
+    console.log(req);
     try {
       const {
         user_name,
@@ -82,6 +82,7 @@ module.exports = {
 
       res.cookie("tomato_token_server", token, {
         httpOnly: true,
+        sameSite: "none",
       });
 
       // Setting a non-HttpOnly cookie for client-side use

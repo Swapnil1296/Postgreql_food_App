@@ -1,7 +1,8 @@
 import React from "react";
 import { assets } from "./../assets/assets";
+import { Outlet } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ children }) => {
   return (
     <div
       className=" h-[500px] my-[30px] mx-2 rounded-md bg-cover bg-center relative  flex flex-col justify-center items-start"
