@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const getUserRouter = require("./routes/user.routes.js");
+const cartRouter = require("./routes/cart.routes.js");
 // const userLoginRoutes = require("./routes/user.routes.js");
 
 dotenv.config();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/user", getUserRouter);
+app.use("/api/cart", cartRouter);
 
 app.get("/api/test", (req, res) => {
   res.send("Hello World");

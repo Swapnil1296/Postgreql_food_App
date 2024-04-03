@@ -76,11 +76,16 @@ module.exports = {
         password: password,
       };
       const user = await userModal.LogInUser(userInfo);
-      const token = jwt.sign({ email: user_email }, process.env.JWT_SECRET, {
-        expiresIn: "1h", // Token expires in 1 hour
-      });
 
-      res.cookie("tomato_token_server", token, {
+      const token = jwt.sign(
+        { userId: user.user_id, email: user_email },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h", // Token expires in 1 hour
+        }
+      );
+
+      res.cookie("tomato_token", token, {
         httpOnly: true,
         sameSite: "none",
       });

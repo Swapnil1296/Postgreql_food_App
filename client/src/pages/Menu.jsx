@@ -22,16 +22,20 @@ const Menu = () => {
 
   const getMealbyCategory = async (category) => {
     setLoading(true);
-    const data = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
-    );
-    const res = await data.json();
+    try {
+      const data = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+      );
+      const res = await data.json();
 
-    setMeals(res.meals);
-    if (res) {
+      setMeals(res.meals);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
       setLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <p className="font-bold text-xl my-2">Explore Our Menu</p>
@@ -46,7 +50,7 @@ const Menu = () => {
               <div className=" font-semibold  text-center mx-7">
                 <button
                   onClick={() => setMeals(null)}
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Go Back to Category
                 </button>
@@ -69,6 +73,7 @@ const Menu = () => {
               <h2 className="text-xl text-gray-900 font-serif">
                 {items.strCategory}
               </h2>
+              <div></div>
             </div>
           ))
         )}
