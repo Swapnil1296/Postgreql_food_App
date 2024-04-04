@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const MealsByCategory = (props) => {
   const mealArray = Object.values(props);
   const [cartItem, setCartItem] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   //   const handleCartItem = (items) => {
   //     setLoading(true);
   //     const newCartItem = {
@@ -28,7 +31,15 @@ const MealsByCategory = (props) => {
         }),
       });
       const data = await res.json();
-      console.log(data);
+      if (data.status === 1) {
+        Swal.fire({
+          title: "The Item is added to the cart",
+          confirmButtonText: "Click here to view the cart",
+          icon: "success",
+        }).then(() => {
+          navigate("/cart");
+        });
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error adding item to cart:", error);

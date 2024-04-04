@@ -85,15 +85,15 @@ module.exports = {
         }
       );
 
-      res.cookie("tomato_token", token, {
-        httpOnly: true,
-        sameSite: "none",
-      });
+      // res.setHeader(
+      //   "Set-Cookie",
+      //   `tomato_token=${token}; HttpOnly; SameSite=None; Secure Access-Control-Allow-Credentials: true`
+      // );
 
       // Setting a non-HttpOnly cookie for client-side use
-      // res.cookie("tomato_token", token, {
-      //   httpOnly: false,
-      // });
+      res.cookie("tomato_token", token, {
+        httpOnly: false,
+      });
       res.status(200).json({
         status: 1,
         message: "User logged in  successfully",

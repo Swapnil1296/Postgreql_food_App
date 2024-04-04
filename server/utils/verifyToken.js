@@ -4,7 +4,7 @@ const errorHandler = require("./error");
 const verifyToken = (req, res, next) => {
   const token =
     req.cookies.tomato_token ??
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxY2M1OGMxMS02MGNhLTQyNTAtYWIyMS1kMzdlNjhjNGVmMzciLCJlbWFpbCI6InVzZXIxNEBnbWFpbC5jb20iLCJpYXQiOjE3MTIxMzkwNjUsImV4cCI6MTcxMjE0MjY2NX0.sXtXrXQrmqcfFGHtf2UIpf7OSANaqhZs8xUIO1LC90Y";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxY2M1OGMxMS02MGNhLTQyNTAtYWIyMS1kMzdlNjhjNGVmMzciLCJlbWFpbCI6InVzZXIxNEBnbWFpbC5jb20iLCJpYXQiOjE3MTIxNDcxMzAsImV4cCI6MTcxMjE1MDczMH0.t42SJdQeLhdJQ-4FGbY0j4s-Wu5A9kXpIOWSpxfeJp4";
   console.log("token", token);
 
   // const decoded = jwt.verify(
