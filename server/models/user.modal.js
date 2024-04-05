@@ -81,7 +81,7 @@ module.exports = {
           resolve(user.rows[0]);
         } else {
           // If passwords don't match, reject with an error
-          throw new Error("Incorrect password");
+          throw new Error("Incorrect password or email");
         }
       } catch (error) {
         console.log("Error in LogInUser:", error.message);

@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import {
   signInFailure,
@@ -8,6 +8,7 @@ import {
   signInSuccess,
 } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "flowbite-react";
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 const validationSchema = Yup.object({
@@ -19,6 +20,9 @@ const validationSchema = Yup.object({
 });
 const UserLogIn = () => {
   const dispatch = useDispatch();
+  // const { error } = useSelector((state) => state.user);
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -43,7 +47,11 @@ const UserLogIn = () => {
           }),
         });
         const data = await res.json();
-        // console.log(data);
+
+        if (data.success === false) {
+          setError(data.errorMessage);
+          dispatch(signInFailure(data.errorMessage));
+        }
         if (data.status === 1) {
           dispatch(signInSuccess(data.user));
           navigate("/");
@@ -105,6 +113,14 @@ const UserLogIn = () => {
             Sign In
           </button>
         </div>
+        {error && (
+          <Alert
+            color="failure"
+            className="border-2 border-gray-500 rounded-xl"
+          >
+            <span className="font-medium">{error}</span>
+          </Alert>
+        )}
         <div>
           <p>
             Don't have a Acocoutn ?{" "}
@@ -113,7 +129,7 @@ const UserLogIn = () => {
               onClick={() => navigate("/sign-up")}
             >
               Sing Up
-            </span>{" "}
+            </span>
             here
           </p>
         </div>

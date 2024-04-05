@@ -1,4 +1,8 @@
-const { AddNewMeal } = require("../models/cart.item.model");
+const {
+  AddNewMeal,
+  getCartByUserId,
+  updateitemQuantity,
+} = require("../models/cart.item.model");
 const errorHandler = require("../utils/error");
 
 module.exports = {
@@ -6,7 +10,7 @@ module.exports = {
     try {
       if (!req.user) {
         return next(
-          errorHandler(401, "You must log in firt to add item to cart")
+          errorHandler(402, "You must log in firt to add item to cart")
         );
       }
       const { meal_name, meal_price, meal_thumb } = req.body;
@@ -27,6 +31,45 @@ module.exports = {
       }
     } catch (error) {
       next(errorHandler(500, error.message));
+    }
+  },
+  getCartItem: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      if (userId !== req.user.userId) {
+        next(errorHandler(402, "Your not authorized to access this"));
+      }
+      const getItems = await getCartByUserId(userId);
+      if (getItems) {
+        res.status(200).json({
+          status: 1,
+          message: "Items fetched successfully",
+          data: getItems,
+        });
+      }
+    } catch (error) {
+      next(errorHandler(500, error.message));
+    }
+  },
+  updateQuantity: async (req, res, next) => {
+    const { userId, itemId } = req.params;
+    if (userId !== req.user.userId) {
+      next(errorHandler(402, "Your not authorized to update this"));
+    }
+    const mealToUpdate = {
+      quantity: req.body.quantity,
+      itemId: itemId,
+      userId: userId,
+    };
+    const updateItems = await updateitemQuantity(mealToUpdate);
+    console.log(updateItems);
+    if (updateItems) {
+      res.status(200).json({
+        status: 1,
+        message: "Items updated successfully",
+        data: updateItems,
+      });
     }
   },
 };

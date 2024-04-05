@@ -1,21 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { signoutSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import { SweetAlert } from "../utils/SessionExpired";
 
-const MealsByCategory = (props) => {
-  const mealArray = Object.values(props);
-  const [cartItem, setCartItem] = useState([]);
-  const [loading, setLoading] = useState(false);
+const MealsByCategory = ({ getMeals, floading }) => {
+  const [loading, setLoading] = useState(floading);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  //   const handleCartItem = (items) => {
-  //     setLoading(true);
-  //     const newCartItem = {
-  //       meal_thumb: items.strMealThumb,
-  //       meal_name: items.strMeal,
-  //       meal_price: `${Math.ceil(Math.random() * 100 + 1)}`,
-  //     };
-  //     addItemToCart(newCartItem);
-  //   };
 
   const addItemToCart = async (items) => {
     try {
@@ -24,6 +17,7 @@ const MealsByCategory = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           meal_thumb: items.strMealThumb,
           meal_name: items.strMeal,
@@ -31,30 +25,39 @@ const MealsByCategory = (props) => {
         }),
       });
       const data = await res.json();
+
       if (data.status === 1) {
-        Swal.fire({
-          title: "The Item is added to the cart",
-          confirmButtonText: "Click here to view the cart",
-          icon: "success",
-        }).then(() => {
-          navigate("/cart");
+        SweetAlert("success", "Hurray !! the meal is added to cart").then(
+          () => {
+            navigate("/cart");
+          }
+        );
+      }
+      if (data.statusCode === 401) {
+        SweetAlert(
+          "error",
+          "Your Session is expired, Please Login to continue"
+        ).then(() => {
+          dispatch(signoutSuccess());
+          navigate("/log-in");
         });
       }
-      setLoading(false);
     } catch (error) {
       console.error("Error adding item to cart:", error);
+    } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner color="pink" />;
   }
+
   return (
     <>
       <div className="grid grid-cols-3 space-x-5  ">
-        {mealArray &&
-          mealArray.map((items) => (
+        {getMeals &&
+          getMeals.map((items) => (
             <div
               className="border-2 border-gray-800 border-dotted m-2 text-center rounded-md flex flex-col"
               key={items.idMeal}

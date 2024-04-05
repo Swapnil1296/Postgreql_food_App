@@ -43,4 +43,39 @@ module.exports = {
       }
     });
   },
+  getCartByUserId: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await db.query(
+          "SELECT * FROM cart_item WHERE user_id = $1",
+          [userId]
+        );
+        if (res.rows.length > 0) {
+          resolve(res.rows);
+        } else {
+          reject(new Error("something went wrong while fetching cart"));
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  updateitemQuantity: (mealToUpdate) => {
+    console.log(mealToUpdate);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await db.query(
+          "UPDATE cart_item SET quantity = $1 WHERE id = $2 AND user_id = $3 RETURNING *",
+          [mealToUpdate.quantity, mealToUpdate.itemId, mealToUpdate.userId]
+        );
+        if (res.rowCount > 0) {
+          resolve(res.rows);
+        } else {
+          reject(new Error("something went wrong while updating quantity"));
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
 };

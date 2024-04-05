@@ -2,20 +2,11 @@ const jwt = require("jsonwebtoken");
 const errorHandler = require("./error");
 
 const verifyToken = (req, res, next) => {
-  const token =
-    req.cookies.tomato_token ??
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxY2M1OGMxMS02MGNhLTQyNTAtYWIyMS1kMzdlNjhjNGVmMzciLCJlbWFpbCI6InVzZXIxNEBnbWFpbC5jb20iLCJpYXQiOjE3MTIxNDcxMzAsImV4cCI6MTcxMjE1MDczMH0.t42SJdQeLhdJQ-4FGbY0j4s-Wu5A9kXpIOWSpxfeJp4";
+  const token = req.cookies.tomato_token;
   console.log("token", token);
 
-  // const decoded = jwt.verify(
-  //   token,
-  //   process.env.JWT_SECRET_KEY || "",
-  //   (err, decoded) => {
-
-  // );
-
   if (!token) {
-    return next(errorHandler(401, "Unauthriozed User"));
+    return next(errorHandler(401, "Token is Missing"));
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err instanceof jwt.TokenExpiredError) {

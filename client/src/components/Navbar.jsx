@@ -2,81 +2,119 @@ import React, { useEffect, useState } from "react";
 import { assets } from "./../assets/assets";
 import { CiSearch } from "react-icons/ci";
 import { IoCartOutline } from "react-icons/io5";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 
 const Navbar = () => {
   const [tab, setTab] = useState("home");
   const { currentUser } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
 
+  const [cartCount, setCartCount] = useState(null);
+  const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const menuItems = [
+    { label: "Home", value: "home" },
+    { label: "Menu", value: "menu" },
+    { label: "Mobile App", value: "mobile app" },
+    { label: "Contact us", value: "contact us" },
+  ];
+
   useEffect(() => {
-    if (tab === "home") {
-      navigate("/");
+    // Extract the pathname from the location object
+    const pathname = location.pathname;
+
+    // Find the menu item that matches the pathname
+    const matchingMenuItem = menuItems.find((item) =>
+      pathname === "/" ? true : `/${item.value}` === pathname
+    );
+    // If a matching menu item is found, set the tab
+    if (matchingMenuItem) {
+      setTab(matchingMenuItem.value);
     } else {
-      navigate(`/${tab}`);
+      // Otherwise, set the tab to an empty string to disable the active class
+      setTab("");
     }
-  }, [tab]);
+  }, [location.pathname]);
+
   const handleSignOut = () => {
     dispatch(signoutSuccess());
   };
+  useEffect(() => {
+    const getCartQuantinity = async () => {
+      try {
+        const getData = await fetch(
+          `http://localhost:8080/api/cart/get-cart/${currentUser.user_id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const res = await getData.json();
+        if (res.status === 1) {
+          setCartCount(res.data.length);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCartQuantinity();
+  }, [location.pathname]);
+
   return (
     <div className="flex justify-between items-center bg-cyan-600 p-4">
       <img src={assets.logo} alt="logo icon" className="" />
+
       <div className="flex items-center space-x-4">
         <ul className="flex space-x-4">
-          <li
-            className={`font-bold text-gray-300 text-md hover:cursor-pointer hover:text-[#240A34] ${
-              tab === "home" ? "underline text-[#240A34]" : ""
-            }`}
-            onClick={() => setTab("home")}
-          >
-            Home
-          </li>
-          <li
-            className={`font-bold text-gray-300 text-md hover:cursor-pointer hover:text-[#240A34] ${
-              tab === "menu" ? "underline text-[#240A34]" : ""
-            }`}
-            onClick={() => setTab("menu")}
-          >
-            Menu
-          </li>
-          <li
-            className={`font-bold text-gray-300 text-md hover:cursor-pointer hover:text-[#240A34]  ${
-              tab === "mobile app" ? "underline text-[#240A34]" : ""
-            }`}
-            onClick={() => setTab("mobile app")}
-          >
-            Mobile App
-          </li>
-          <li
-            className={`font-bold text-gray-300 text-md hover:cursor-pointer hover:text-[#240A34]  ${
-              tab === "contact us" ? "underline text-[#240A34]" : ""
-            }`}
-            onClick={() => setTab("contact us")}
-          >
-            Contact us
-          </li>
+          {menuItems.map((item) => (
+            <li
+              key={item.value}
+              className={`font-bold text-gray-300 text-md hover:cursor-pointer hover:text-[#240A34] ${
+                tab === item.value ? "underline text-[#240A34]" : ""
+              }`}
+              onClick={() =>
+                navigate(item.value === "home" ? "/" : `/${item.value}`)
+              }
+            >
+              {item.label}
+            </li>
+          ))}
         </ul>
       </div>
 
-      {/* Search and Cart Icons */}
       <div className="flex items-center space-x-4">
         <CiSearch size={30} color="#F8BDEB" />
-        <IoCartOutline size={30} color="#F8BDEB" />
-        {currentUser && currentUser ? (
+        <div
+          className="relative hover:cursor-pointer"
+          onClick={() => navigate("/cart")}
+        >
+          {/* Cart icon with badge */}
+          <IoCartOutline size={30} color="#F8BDEB" />
+          {cartCount > 0 && (
+            <span className="bg-gray-600 text-blue-300  rounded-full w-5 h-5 flex items-center justify-center absolute -top-1 -right-1">
+              {cartCount}
+            </span>
+          )}
+        </div>
+
+        {currentUser ? (
           <button
-            onClick={() => handleSignOut()}
-            className="bg-[#1B4242] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
+            onClick={handleSignOut}
+            className="bg-[#da2c2f] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
           >
             Sign Out
           </button>
         ) : (
           <button
             onClick={() => navigate("/log-in")}
-            className="bg-[#1B4242] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
+            className="bg-[#571b8f] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
           >
             Sign In
           </button>
