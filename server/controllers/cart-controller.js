@@ -2,6 +2,7 @@ const {
   AddNewMeal,
   getCartByUserId,
   updateitemQuantity,
+  addCustomerAddress,
 } = require("../models/cart.item.model");
 const errorHandler = require("../utils/error");
 
@@ -69,6 +70,33 @@ module.exports = {
         status: 1,
         message: "Items updated successfully",
         data: updateItems,
+      });
+    }
+  },
+  addCustomerAddress: async (req, res, next) => {
+    const { userId } = req.params;
+    if (userId !== req.user.userId) {
+      next(errorHandler(402, "Your not authorized to update this"));
+    }
+    const addressDetails = {
+      userId: userId,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      phone: req.body.phone,
+      street_one: req.body.streetLineOne,
+      street_two: req.body.streetLineTwo,
+      city: req.body.city,
+      state: req.body.state,
+
+      zipcode: req.body.zipcode,
+    };
+    const addAddress = await addCustomerAddress(addressDetails);
+
+    if (addAddress) {
+      res.status(200).json({
+        status: 1,
+        message: "Address added successfully",
+        data: addAddress,
       });
     }
   },

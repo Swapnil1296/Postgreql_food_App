@@ -78,4 +78,45 @@ module.exports = {
       }
     });
   },
+  addCustomerAddress: (addressDetails) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const {
+          userId,
+          first_name,
+          last_name,
+          street_one,
+          street_two,
+          city,
+          zipcode,
+          phone,
+          state,
+        } = addressDetails;
+
+        const res = await db.query(
+          "INSERT INTO customer_address (user_id, first_name, last_name, street_one, street_two, city, state, zipcode, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+          [
+            userId,
+            first_name,
+            last_name,
+            street_one,
+            street_two,
+            city,
+            state,
+            zipcode,
+            phone,
+          ]
+        );
+
+        if (res.rowCount > 0) {
+          resolve(res.rows);
+        } else {
+          reject(new Error("Something went wrong while inserting address"));
+        }
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
+  },
 };

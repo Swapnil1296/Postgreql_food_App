@@ -1,6 +1,23 @@
+import { useFormik } from "formik";
 import React from "react";
+const initialValues = {
+  first_name: "",
+  last_name: "",
+  phone: "",
+  streetLineOne: "",
+  streetLineTwo: "",
+  city: "",
+  state: "",
+  zipcode: "",
+};
 
 const PlaceOrder = () => {
+  const formik = useFormik({
+    initialValues,
+    onSubmit: async (values) => {
+      console.log(values);
+    },
+  });
   return (
     <div className="flex flex-col  justify-center items-center mt-6 gap-5 p-2 ">
       <div className="bg-slate-500 w-1/2 p-2">
@@ -13,11 +30,11 @@ const PlaceOrder = () => {
           <div className="text-left m-5 ">
             <span className="font-semibold text-lg">Customer Details</span>
           </div>
-          <form>
+          <form onSubmit={formik.handleSubmit}>
             <div className="grid gap-6 mb-6 md:grid-cols-2">
               <div>
                 <label
-                  for="first_name"
+                  htmlFor="first_name"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   First name
@@ -25,14 +42,17 @@ const PlaceOrder = () => {
                 <input
                   type="text"
                   id="first_name"
-                  className="bg-gray-50 border border-gray-300 text-blue-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value={formik.values.first_name}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
               <div>
                 <label
-                  for="last_name"
+                  htmlFor="last_name"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   Last name
@@ -40,15 +60,18 @@ const PlaceOrder = () => {
                 <input
                   type="text"
                   id="last_name"
-                  className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value={formik.values.last_name}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Doe"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
 
               <div>
                 <label
-                  for="phone"
+                  htmlFor="phone"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   Phone number
@@ -56,16 +79,19 @@ const PlaceOrder = () => {
                 <input
                   type="text"
                   id="phone"
-                  className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="0000000000"
-                  pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                  // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
             </div>
             <div className="mb-6">
               <label
-                for="streetLineOne"
+                htmlFor="streetLineOne"
                 className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
               >
                 Street Address
@@ -73,13 +99,16 @@ const PlaceOrder = () => {
               <input
                 type="text"
                 id="streetLineOne"
-                className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={formik.values.streetLineOne}
+                onChange={formik.handleChange}
+                className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required={false}
+                autoComplete="off"
               />
             </div>
-            <div class="mb-6">
+            <div className="mb-6">
               <label
-                for="streetLineTwo"
+                htmlFor="streetLineTwo"
                 className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
               >
                 Street Address Line 2
@@ -87,15 +116,18 @@ const PlaceOrder = () => {
               <input
                 type="text"
                 id="streetLineTwo"
-                className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={formik.values.streetLineTwo}
+                onChange={formik.handleChange}
+                className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize  rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required={false}
+                autoComplete="off"
               />
             </div>
 
             <div className="grid gap-6 mb-6 md:grid-cols-2">
               <div>
                 <label
-                  for="city"
+                  htmlFor="city"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   City
@@ -103,28 +135,34 @@ const PlaceOrder = () => {
                 <input
                   type="text"
                   id="city"
-                  className="bg-gray-50 border border-gray-300 text-blue-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value={formik.values.city}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
               <div>
                 <label
-                  for="state"
+                  htmlFor="state"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   State/Province
                 </label>
                 <input
-                  type="state"
-                  id="last_name"
-                  className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  type="text"
+                  id="state"
+                  value={formik.values.state}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
 
               <div>
                 <label
-                  for="zipcode"
+                  htmlFor="zipcode"
                   className="block mb-2 text-sm font-medium text-blue-300 dark:text-white"
                 >
                   Zip/Postal Code
@@ -132,10 +170,13 @@ const PlaceOrder = () => {
                 <input
                   type="text"
                   id="zipcode"
-                  className="bg-gray-50 border border-gray-300 text-blue-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value={formik.values.zipcode}
+                  onChange={formik.handleChange}
+                  className="bg-gray-50 border border-gray-300 text-blue-700 font-semibold font-serif text-md capitalize rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="000000"
-                  pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                  // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   required={false}
+                  autoComplete="off"
                 />
               </div>
             </div>
