@@ -5,6 +5,7 @@ const {
   getCartItem,
   updateQuantity,
   addCustomerAddress,
+  getCustomerAddress,
 } = require("../controllers/cart-controller");
 const verifyToken = require("../utils/verifyToken");
 
@@ -14,4 +15,5 @@ router.post("/add-item", verifyToken, AddToCart);
 router.get("/get-cart/:userId", verifyToken, getCartItem);
 router.put("/update-quantity/:itemId/:userId", verifyToken, updateQuantity);
 router.post("/add-customer-address/:userId", verifyToken, addCustomerAddress);
+router.get("/get-customer-address/:userId", verifyToken, getCustomerAddress);
 module.exports = router;

@@ -3,6 +3,7 @@ const {
   getCartByUserId,
   updateitemQuantity,
   addCustomerAddress,
+  getCustomerAddress,
 } = require("../models/cart.item.model");
 const errorHandler = require("../utils/error");
 
@@ -98,6 +99,30 @@ module.exports = {
         message: "Address added successfully",
         data: addAddress,
       });
+    }
+  },
+  getCustomerAddress: async (req, res, next) => {
+    try {
+      if (req.params.userId !== req.user.userId) {
+        next(errorHandler(403, "your not authorized to access"));
+      }
+      const getAddress = await getCustomerAddress(req.params.userId);
+      if (getAddress && getAddress !== "no address found") {
+        return res.status(200).json({
+          status: 1,
+          message: "Address fetched successfully",
+          data: getAddress,
+        });
+      } else if (getAddress === "no address found") {
+        return res.status(200).json({
+          status: 0,
+          message: "No address found for the provided user ID",
+        });
+      } else {
+        return next(errorHandler(404, "Address not found"));
+      }
+    } catch (error) {
+      next(errorHandler(500, error.message));
     }
   },
 };

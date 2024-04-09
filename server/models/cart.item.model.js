@@ -119,4 +119,25 @@ module.exports = {
       }
     });
   },
+  getCustomerAddress: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await db.query(
+          "SELECT * FROM customer_address WHERE user_id = $1",
+          [userId]
+        );
+
+        if (res.rows.length > 0) {
+          resolve(res.rows);
+        }
+        if (res.rows.length > 0) {
+          resolve(res.rows);
+        } else {
+          resolve("no address found");
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
 };
