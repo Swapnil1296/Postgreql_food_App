@@ -8,36 +8,35 @@ const UpdateAddress = ({ setIsEdit, setIsAddressUpdated }) => {
   const { currentUser, userAddress } = useSelector((state) => state.user);
 
   const UpdateUserAddress = async (values) => {
-    //     try {
-    //       const res = await fetch(
-    //         `http://localhost:8080/api/cart/add-customer-address/${currentUser.user_id}`,
-    //         {
-    //           method: "POST",
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //           credentials: "include",
-    //           body: JSON.stringify(values),
-    //         }
-    //       );
-    //       const data = await res.json();
-    //       if (data.status === 1) {
-    //         SweetAlert("success", "Your address saved successfully");
-    //         setSaved(true);
-    //         setIsEditable(false);
-    //       }
-    //       if (data.statusCode === 401) {
-    //         SweetAlert(
-    //           "error",
-    //           "Your Session is expired, Please Login to continue"
-    //         ).then(() => {
-    //           dispatch(signoutSuccess());
-    //           navigate("/log-in");
-    //         });
-    //       }
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/cart/update-customer-address/${currentUser.user_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(values),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (data.status === 1) {
+        SweetAlert("success", "Your address saved successfully");
+      }
+      if (data.statusCode === 401) {
+        SweetAlert(
+          "error",
+          "Your Session is expired, Please Login to continue"
+        ).then(() => {
+          dispatch(signoutSuccess());
+          navigate("/log-in");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const initialValues = {

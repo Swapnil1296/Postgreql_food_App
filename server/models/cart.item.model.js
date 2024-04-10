@@ -1,5 +1,36 @@
 const db = require("../configuration/dbConfig");
 
+// check if the value is changed befor updatidng
+const deepEqual = (obj1, obj2) => {
+  // Get the keys of the two objects
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  // Check if the number of keys is the same
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  // Iterate over the keys and compare the values
+  for (let key of keys1) {
+    const val1 = obj1[key];
+    const val2 = obj2[key];
+
+    // If the value is an object, recursively call deepEqual
+    if (typeof val1 === "object" && typeof val2 === "object") {
+      if (!deepEqual(val1, val2)) {
+        return false;
+      }
+    } else if (val1 !== val2) {
+      // If the values are not equal, return false
+      return false;
+    }
+  }
+
+  // If all keys and values are equal, return true
+  return true;
+};
+
 module.exports = {
   AddNewMeal: async (mealDetails) => {
     return new Promise(async (resolve, reject) => {
@@ -137,6 +168,45 @@ module.exports = {
         }
       } catch (error) {
         reject(error);
+      }
+    });
+  },
+  updateCustomerAddress: (address) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!address.userId) {
+          reject(new Error("User ID is required"));
+        }
+
+        const {
+          userId,
+          first_name,
+          last_name,
+          phone,
+          street_one,
+          street_two,
+          city,
+          state,
+          zipcode,
+        } = address;
+
+        const update = await db.query(
+          `UPDATE customer_address 
+                 SET first_name='${first_name}', last_name='${last_name}', phone='${phone}', 
+                     street_one='${street_one}', street_two='${street_two}', city='${city}',
+                     state='${state}', zipcode='${zipcode}' 
+                 WHERE user_id='${userId}' 
+                 RETURNING *`
+        );
+
+        if (update.rowCount > 0) {
+          resolve(update.rows);
+        } else {
+          reject(new Error("Failed to update address"));
+        }
+      } catch (error) {
+        console.log("Error updating address:", error);
+        reject(error.message);
       }
     });
   },

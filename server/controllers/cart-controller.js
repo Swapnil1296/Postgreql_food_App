@@ -4,6 +4,7 @@ const {
   updateitemQuantity,
   addCustomerAddress,
   getCustomerAddress,
+  updateCustomerAddress,
 } = require("../models/cart.item.model");
 const errorHandler = require("../utils/error");
 
@@ -103,6 +104,9 @@ module.exports = {
   },
   getCustomerAddress: async (req, res, next) => {
     try {
+      if (!req.user || !req.user.userId) {
+        return next(errorHandler(401, "User ID is missing"));
+      }
       if (req.params.userId !== req.user.userId) {
         next(errorHandler(403, "your not authorized to access"));
       }
@@ -123,6 +127,44 @@ module.exports = {
       }
     } catch (error) {
       next(errorHandler(500, error.message));
+    }
+  },
+  updateCustomerAddress: async function (req, res, next) {
+    try {
+      const { userId } = req.params;
+      if (!req.user || !req.user.userId) {
+        return next(errorHandler(401, "User ID is missing"));
+      }
+      if (userId !== req.user.userId) {
+        return next(errorHandler(404, "your not authorized"));
+      }
+
+      const addressDetails = {
+        userId: userId,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        phone: req.body.phone,
+        street_one: req.body.street_one,
+        street_two: req.body.street_two,
+        city: req.body.city,
+        state: req.body.state,
+        zipcode: req.body.zipcode,
+      };
+
+      const update = await updateCustomerAddress(addressDetails);
+
+      if (update && update.length > 0) {
+        return res.status(200).json({
+          status: 1,
+          message: "Address updated successfully",
+          data: update,
+        });
+      } else {
+        return next(errorHandler(500, "Failed to update address"));
+      }
+    } catch (error) {
+      console.log("update address", error);
+      return next(errorHandler(500, error.message));
     }
   },
 };
