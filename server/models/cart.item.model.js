@@ -189,7 +189,7 @@ module.exports = {
           state,
           zipcode,
         } = address;
-
+        console.log(street_one, street_two);
         const update = await db.query(
           `UPDATE customer_address 
                  SET first_name='${first_name}', last_name='${last_name}', phone='${phone}', 

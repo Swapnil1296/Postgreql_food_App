@@ -7,47 +7,11 @@ const ShowAddress = () => {
   const { currentUser, userAddress } = useSelector((state) => state.user);
   const [isEdit, setIsEdit] = useState(true);
   const [isAddressUpdated, setIsAddressUpdated] = useState(false);
+
   const dispatch = useDispatch();
-  useEffect(() => {
-    const getCustomerAddress = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:8080/api/cart/get-customer-address/${currentUser.user_id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
-        const data = await res.json();
 
-        if (data.status === 1) {
-          console.log("in useEfffect");
-          dispatch(setUserAddress(data.data));
-        }
-
-        if (data.statusCode === 401) {
-          SweetAlert(
-            "error",
-            "Your Session is expired, Please Login to continue"
-          ).then(() => {
-            dispatch(signoutSuccess());
-            navigate("/log-in");
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (currentUser) {
-      getCustomerAddress();
-    } else return null;
-  }, [isAddressUpdated]);
   return (
-    <div className="bg-slate-500 w-1/2 p-2">
+    <div className="bg-slate-500 w-1/2 p-2 ">
       {isEdit ? (
         <>
           <div className="text-center font-bold text-lg font-serif underline text-cyan-900">
@@ -89,7 +53,7 @@ const ShowAddress = () => {
               Want to change this address?{" "}
               <span
                 onClick={() => setIsEdit(false)}
-                className="text-blue-600 hover:cursor-pointer"
+                className="text-cyan-300 hover:cursor-pointer"
               >
                 Click here
               </span>

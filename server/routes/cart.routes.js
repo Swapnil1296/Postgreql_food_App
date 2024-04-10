@@ -22,4 +22,5 @@ router.put(
   verifyToken,
   updateCustomerAddress
 );
+
 module.exports = router;

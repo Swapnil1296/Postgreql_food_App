@@ -1,5 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
+import { useSelector } from "react-redux";
+import { SweetAlert } from "../utils/SessionExpired";
 const initialValues = {
   first_name: "",
   last_name: "",
@@ -10,7 +12,8 @@ const initialValues = {
   state: "",
   zipcode: "",
 };
-const AddNewAddress = () => {
+const AddNewAddress = ({ setHaveAddress }) => {
+  const { currentUser } = useSelector((state) => state.user);
   const PostAddress = async (values) => {
     try {
       const res = await fetch(
@@ -27,8 +30,8 @@ const AddNewAddress = () => {
       const data = await res.json();
       if (data.status === 1) {
         SweetAlert("success", "Your address saved successfully");
-        setSaved(true);
-        setIsEditable(false);
+
+        setHaveAddress(true);
       }
       if (data.statusCode === 401) {
         SweetAlert(

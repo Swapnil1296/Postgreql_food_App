@@ -107,14 +107,14 @@ const Navbar = () => {
         {currentUser ? (
           <button
             onClick={handleSignOut}
-            className="bg-[#da2c2f] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
+            className="inline-block w-auto text-center  px-6 py-4 text-white transition-all bg-gray-700 dark:bg-white dark:text-gray-800 rounded-md shadow-xl sm:w-auto hover:bg-gray-900 hover:text-white shadow-neutral-300 dark:shadow-neutral-700 hover:shadow-2xl hover:shadow-neutral-400 hover:-tranneutral-y-px"
           >
             Sign Out
           </button>
         ) : (
           <button
             onClick={() => navigate("/log-in")}
-            className="bg-[#571b8f] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:text-[#240A34]"
+            className="inline-block w-auto text-center  px-6 py-4 text-white transition-all rounded-md shadow-xl sm:w-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:bg-gradient-to-b dark:shadow-blue-900 shadow-blue-200 hover:shadow-2xl hover:shadow-blue-400 hover:-tranneutral-y-px "
           >
             Sign In
           </button>
