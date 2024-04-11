@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SweetAlert } from "../utils/SessionExpired";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { signoutSuccess } from "../redux/user/userSlice";
 
 const Cart = () => {
   const [cartItem, setCartItem] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     const getCartQuantinity = async () => {
       try {
@@ -24,6 +26,16 @@ const Cart = () => {
         const res = await getData.json();
         if (res.status === 1) {
           setCartItem(res.data);
+        }
+        if (
+          res.success === false &&
+          res.errorMessage === "no Items added in the cart"
+        ) {
+          SweetAlert("warning", "Please add some items to the cart").then(
+            () => {
+              navigate("/menu");
+            }
+          );
         }
         if (res.statusCode === 401) {
           SweetAlert(
@@ -43,7 +55,6 @@ const Cart = () => {
   }, []);
 
   const updateQuantity = async (itemId, newQuantity) => {
-    console.log(typeof null);
     try {
       // newQuantity = parseInt(newQuantity);
       const updatedItems = cartItem.map((item) => {
@@ -81,16 +92,16 @@ const Cart = () => {
   };
 
   return (
-    <div className="w-full flex flex-wrap justify-center items-center space-y-10 ">
-      <div className="flex  gap-3 text-center capitalize mt-1 p-2 ">
+    <div className="w-full flex flex-wrap justify-center items-center space-y-10 p-2 bg-cyan-300">
+      <div className="grid grid-cols-3  gap-3 text-center capitalize mt-1 p-3 xl:w-3/4 ">
         {cartItem &&
           cartItem.map((item) => {
             return (
               <div
                 key={item.id}
-                className="relative border-2 border-gray-600 border-dashed rounded-lg"
+                className="relative border-2 border-gray-600 border-dashed rounded-lg bg-slate-500"
               >
-                <div className=" relative  ">
+                <div className=" relative p-1">
                   <img
                     src={item.meal_thumb}
                     alt="image"
@@ -121,7 +132,7 @@ const Cart = () => {
                     </button>
                   </div>
                 </div>
-                <div className="mt-2 text-left ml-2">
+                <div className="mt-2 text-left ml-2 p-2">
                   <p className="font-semibold text-lg text-rose-700 font-serif">
                     {item.meal_name}
                   </p>
@@ -136,9 +147,15 @@ const Cart = () => {
                   <p>
                     <span className="font-sans font-semibold">
                       Price: {item.meal_price}
-                    </span>{" "}
+                    </span>
                     Rupees
                   </p>
+                  <span className="text-orange-800">
+                    Get your veggies in with this delicious and quick noodle
+                    stir-fry. Green onions and garlic pack a flavor punch, while
+                    the brown sugar and soy tie everything together in a sweet
+                    and savory sauce.
+                  </span>
                 </div>
               </div>
             );

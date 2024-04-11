@@ -4,13 +4,13 @@ import { CiSearch } from "react-icons/ci";
 import { IoCartOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signoutSuccess } from "../redux/user/userSlice";
+import { setCartItems, signoutSuccess } from "../redux/user/userSlice";
 
 const Navbar = () => {
   const [tab, setTab] = useState("home");
   const { currentUser } = useSelector((state) => state.user);
 
-  const [cartCount, setCartCount] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Navbar = () => {
     const getCartQuantinity = async () => {
       try {
         const getData = await fetch(
-          `http://localhost:8080/api/cart/get-cart/${currentUser.user_id}`,
+          `http://localhost:8080/api/cart/get-cart/${currentUser?.user_id}`,
           {
             method: "GET",
             headers: {
@@ -57,7 +57,14 @@ const Navbar = () => {
         );
         const res = await getData.json();
         if (res.status === 1) {
+          dispatch(setCartItems(res.data));
           setCartCount(res.data.length);
+        }
+        if (
+          res.success === false &&
+          res.errorMessage === "no Items added in the cart"
+        ) {
+          setCartCount(0);
         }
       } catch (error) {
         console.log(error);
@@ -97,7 +104,7 @@ const Navbar = () => {
         >
           {/* Cart icon with badge */}
           <IoCartOutline size={30} color="#F8BDEB" />
-          {cartCount > 0 && (
+          {currentUser && cartCount > 0 && (
             <span className="bg-gray-600 text-blue-300  rounded-full w-5 h-5 flex items-center justify-center absolute -top-1 -right-1">
               {cartCount}
             </span>

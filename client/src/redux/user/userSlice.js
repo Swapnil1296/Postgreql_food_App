@@ -5,6 +5,7 @@ const initialState = {
   error: null,
   loading: false,
   userAddress: null,
+  cartItem: null,
 };
 
 const userSlice = createSlice({
@@ -28,10 +29,15 @@ const userSlice = createSlice({
       state.userAddress = action.payload;
       state.error = action.payload;
     },
+    setCartItems: (state, action) => {
+      state.cartItem = action.payload;
+      state.error = action.payload;
+    },
 
     signoutSuccess: (state) => {
       state.currentUser = null;
       state.userAddress = null;
+      state.cartItem = null;
       state.error = null;
       state.loading = false;
     },
@@ -44,6 +50,7 @@ export const {
   signInFailure,
   signoutSuccess,
   setUserAddress,
+  setCartItems,
 } = userSlice.actions;
 
 export default userSlice.reducer;

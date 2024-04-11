@@ -27,7 +27,7 @@ const MealsByCategory = ({ getMeals, floading }) => {
       const data = await res.json();
 
       if (data.status === 1) {
-        SweetAlert("success", "Hurray !! the meal is added to cart").then(
+        SweetAlert("success", "Hurray !! the meal is added to cart", 600).then(
           () => {
             navigate("/cart");
           }

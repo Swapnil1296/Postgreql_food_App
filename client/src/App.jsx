@@ -12,6 +12,7 @@ import UserLogIn from "./pages/UserLogIn";
 import PrivateRoute from "./routes/PrivateRoute";
 import SignUpUser from "./pages/SignUpUser";
 import Header from "./components/Header";
+import Payment from "./pages/Payment";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/place-order" element={<PlaceOrder />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
         <Route path="/menu" element={<Menu />} />
       </Routes>

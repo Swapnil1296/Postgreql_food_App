@@ -6,15 +6,46 @@ import { useNavigate } from "react-router-dom";
 const ShowFinalMeals = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [cartItems, setCartItems] = useState();
-  const [loading, setLoaing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const memoizedDispatch = useMemo(() => dispatch, []);
   const memoizedNavigate = useMemo(() => navigate, []);
+  const handleRemoveItems = async (mealId) => {
+    try {
+      const remove = await fetch(
+        `http://localhost:8080/api/cart/remove-cart-items/${mealId}/${currentUser.user_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const res = await remove.json();
+
+      if (res.status === 1) {
+        SweetAlert("success", `${res.message}`, 700);
+      }
+      if (res.statusCode === 401) {
+        SweetAlert(
+          "error",
+          "Your Session is expired, Please Login to continue"
+        ).then(() => {
+          memoizedDispatch(signoutSuccess());
+          memoizedNavigate("/log-in");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
   useEffect(() => {
     const getCartQuantinity = async () => {
       try {
-        setLoaing(true);
+        //
         const getData = await fetch(
           `http://localhost:8080/api/cart/get-cart/${currentUser.user_id}`,
           {
@@ -26,8 +57,21 @@ const ShowFinalMeals = () => {
           }
         );
         const res = await getData.json();
+
         if (res.status === 1) {
+          //
           setCartItems(res.data);
+        }
+        if (
+          res.success === false &&
+          res.errorMessage === "no Items added in the cart"
+        ) {
+          SweetAlert("warning", "Please add some items to the cart").then(
+            () => {
+              navigate("/menu");
+              //
+            }
+          );
         }
         if (res.statusCode === 401) {
           SweetAlert(
@@ -36,17 +80,18 @@ const ShowFinalMeals = () => {
           ).then(() => {
             memoizedDispatch(signoutSuccess());
             memoizedNavigate("/log-in");
+            //
           });
         }
       } catch (error) {
         console.log(error);
+        //
       } finally {
-        setLoaing(false);
       }
     };
 
     getCartQuantinity();
-  }, []);
+  }, [handleRemoveItems]);
 
   return (
     <div className="w-full grid grid-cols-1 gap-3 m-2 p-2 items-center justify-center">
@@ -54,6 +99,8 @@ const ShowFinalMeals = () => {
         <div className="font-semibold border-2 font-sans bg-slate-400 rounded-full p-3">
           <span>Loading...</span>
         </div>
+      ) : cartItems === "" ? (
+        <span>your cart it empty</span>
       ) : (
         cartItems?.map((item) => {
           return (
@@ -93,7 +140,9 @@ const ShowFinalMeals = () => {
                   kid-approved weeknight meal.
                 </span>
                 <div className="animate-bounce focus:animate-none hover:animate-none inline-flex text-md font-medium bg-indigo-900 mt-3 px-4 py-2 rounded-lg tracking-wide text-white">
-                  <button>Doen't Like It! Remove</button>
+                  <button onClick={() => handleRemoveItems(item.id)}>
+                    Doen't Like It! Remove
+                  </button>
                 </div>
               </div>
             </div>

@@ -7,6 +7,7 @@ const {
   addCustomerAddress,
   getCustomerAddress,
   updateCustomerAddress,
+  removeCartItems,
 } = require("../controllers/cart-controller");
 const verifyToken = require("../utils/verifyToken");
 
@@ -22,5 +23,9 @@ router.put(
   verifyToken,
   updateCustomerAddress
 );
-
+router.delete(
+  "/remove-cart-items/:mealId/:userId",
+  verifyToken,
+  removeCartItems
+);
 module.exports = router;

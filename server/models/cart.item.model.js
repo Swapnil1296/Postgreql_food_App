@@ -84,7 +84,7 @@ module.exports = {
         if (res.rows.length > 0) {
           resolve(res.rows);
         } else {
-          reject(new Error("something went wrong while fetching cart"));
+          reject(new Error("no Items added in the cart"));
         }
       } catch (error) {
         reject(error);
@@ -206,6 +206,25 @@ module.exports = {
         }
       } catch (error) {
         console.log("Error updating address:", error);
+        reject(error.message);
+      }
+    });
+  },
+  removeCartItems: async (userId, mealId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId || !mealId) {
+          reject(new Error("User ID and meal ID are required"));
+        }
+        const res = await db.query(
+          "DELETE FROM cart_item WHERE user_id = $1 AND id = $2 RETURNING  meal_name",
+          [userId, mealId]
+        );
+        if (res.rows.length > 0) {
+          resolve(res.rows);
+        }
+      } catch (error) {
+        console.log(error.message);
         reject(error.message);
       }
     });

@@ -84,8 +84,8 @@ const PlaceOrder = () => {
         <ShowFinalMeals />
         <div>
           <button
-            type="submit"
-            className="border border-gray-700 text-white bg-blue-700 text-sm rounded-lg focus:outline-none focus:border-blue-500 block w-full p-2.5 font-medium dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            onClick={() => navigate("/payment")}
+            className="border border-gray-700 text-cyan-300 bg-gray-600  rounded-lg focus:outline-none focus:border-blue-500 block w-full p-2.5 font-medium font-serif text-lg"
           >
             Confirm your order
           </button>

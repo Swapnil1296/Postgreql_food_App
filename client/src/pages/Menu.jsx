@@ -56,7 +56,10 @@ const Menu = () => {
         ) : (
           data &&
           data.map((items, index) => (
-            <div className="flex flex-col items-center justify-center  ">
+            <div
+              className="flex flex-col items-center justify-center  "
+              key={items.strCategory}
+            >
               <div
                 onClick={() => getMealbyCategory(items.strCategory)}
                 key={index}

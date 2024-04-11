@@ -5,6 +5,7 @@ const {
   addCustomerAddress,
   getCustomerAddress,
   updateCustomerAddress,
+  removeCartItems,
 } = require("../models/cart.item.model");
 const errorHandler = require("../utils/error");
 
@@ -132,7 +133,7 @@ module.exports = {
   updateCustomerAddress: async function (req, res, next) {
     try {
       const { userId } = req.params;
-      if (!req.user || !req.user.userId) {
+      if (!userId || !req.user.userId) {
         return next(errorHandler(401, "User ID is missing"));
       }
       if (userId !== req.user.userId) {
@@ -165,6 +166,28 @@ module.exports = {
     } catch (error) {
       console.log("update address", error);
       return next(errorHandler(500, error.message));
+    }
+  },
+  removeCartItems: async (req, res, next) => {
+    try {
+      const { userId, mealId } = req.params;
+      if (!mealId || !userId) {
+        return next(errorHandler(400, "Meal ID is missing"));
+      }
+
+      if (userId !== req.user.userId) {
+        return next(errorHandler(404, "your not authorized"));
+      }
+      const removeItems = await removeCartItems(userId, mealId);
+      if (removeItems) {
+        res.status(200).json({
+          status: 1,
+          message: "Items removed successfully",
+          data: removeItems,
+        });
+      }
+    } catch (error) {
+      next(errorHandler(500, error.message));
     }
   },
 };
